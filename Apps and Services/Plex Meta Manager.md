@@ -4,6 +4,7 @@ modified: Wed 2023-12-27 @ 07:55 PM
 ---
 *These are my actual configs (except for my config.yml file as that contains sensitive info) and will be updated as I get to them.*
 
+For more info see my GitHub "plex-meta-manager" repo
 
 ## Updating Git Repo
 *this header is up top on this note so that I don't forget to do it*
