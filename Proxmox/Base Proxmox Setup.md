@@ -315,4 +315,4 @@ sudo systemctl enable fail2ban --now
 
 # Snapshots
 
-- In the [[Homelab/Backup and Maintenance]] note follow the "ZFS Snapshots w/ cron" section and consult your specific machine's note of what snapshots to turn on or not
+- In the [[Backup and Maintenance]] note follow the "ZFS Snapshots w/ cron" section and consult your specific machine's note of what snapshots to turn on or not

@@ -1,7 +1,4 @@
----
-created: Tue 2023-05-02 @ 06:32 PM
-modified: Wed 2023-12-27 @ 08:08 PM
----
+# SSH
 
 * Turn off root user access
 

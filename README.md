@@ -14,6 +14,8 @@ This is where I share my personal knowledge base on self-hosting and other homel
 	- Deep-13 is my zpool name
 	- Tom-Servo, Crow and Gypsy are the names of my servers
 
+- Although it's wasn't my aim to do so, it's entirely possible that someone else's words ended up in my notes somewhere since I take what I find that works and go off of that. As for my notes anyone is allowed to use anything for free and without attribution.
+
 ***
 
 I hope I can help out some rookies with these notes. Send me a message here or email me at mrjohnnycake@gmail.com if you have any questions you'd like answered or even tips about what you think I'm doing wrong.

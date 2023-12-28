@@ -1,7 +1,3 @@
----
-created: Tue 2023-05-02 @ 06:32 PM
-modified: Wed 2023-12-27 @ 04:26 PM
----
 https://wiki.debian.org/ZFS
 
 ## Pool and Datasets ##
@@ -104,6 +100,7 @@ service smbd restart
 
 * Open File Explorer and go to the Network tab
 * In the location bar where it says Network, paste this:
+	* This is for sharing my Zpool/Dataset/Dataset of Deep-13/NAS/Dave
 
 ```
 \\192.168.10.10\Deep_13_NAS_Dave

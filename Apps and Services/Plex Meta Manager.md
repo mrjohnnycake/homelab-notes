@@ -23,7 +23,7 @@ git commit -m 'type out your commit message here'
 git push
 ```
 
-- I have added `git pull` to crontab so that changes that I make on my computer and push to GitHub are pulled to the server automatically once a day. See my [[Homelab/Backup and Maintenance]] note for that info.
+- I have added `git pull` to crontab so that changes that I make on my computer and push to GitHub are pulled to the server automatically once a day. See my [[Backup and Maintenance]] note for that info.
 
 
 # Docker Install

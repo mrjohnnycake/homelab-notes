@@ -1,14 +1,3 @@
----
-title: How to install and configure fail2ban firewall rules for security
-created: Fri 2023-12-22 @ 12:38 PM
-tags:
-  - debian
-  - tutorial
-  - firewall
-  - security
-type: 
-modified: Wed 2023-12-27 @ 04:21 PM
----
 # Install
 
 Install these if you haven't already:
@@ -21,7 +10,7 @@ sudo apt install fail2ban iptables
 
 # Configuring
 
-When `fail2ban` gets updated it clears the config so make a copy and it'll persist across upgrades:
+When `fail2ban` gets updated it clears the config file so make a copy and it'll persist across upgrades:
 ```
 sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 ```
