@@ -1,7 +1,8 @@
----
-created: Tue 2023-05-02 @ 06:32 PM
-modified: Wed 2023-12-27 @ 04:31 PM
----
+# Note on the note
+
+I used to run Ubuntu on my VMs before switching to Debian. I found that Debian already had some packages installed and the steps were slightly different even though Ubuntu is based on Debian. If you're using Ubuntu I would suggest trying the Debian walkthrough and if it doesn't work then check out what is different and make those changes.
+
+
 # Debian Based
 
 Email Alerts Setup (Gmail)

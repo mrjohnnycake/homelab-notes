@@ -1,7 +1,3 @@
----
-created: Wed 2023-12-27 @ 08:09 PM
-modified: Thu 2023-12-28 @ 08:44 AM
----
 # Raspberry Pi OS Setup
 
 It's Linux so the setup can be mostly copied from other notes but here are a few specifics (ex. Raspberry Pi OS doesn't create the SSH folder by default)

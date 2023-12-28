@@ -1,7 +1,75 @@
----
-created: Tue 2023-05-02 @ 06:32 PM
-modified: Wed 2023-12-27 @ 06:35 PM
----
+# GitHub CLI Setup
+
+Install Github CLI (this is all one command)
+```
+type -p curl >/dev/null || sudo apt install curl -y
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+```
+
+```
+gh auth login
+```
+
+```
+Select GitHub.com
+
+Select SSH
+
+Yes
+```
+
+- For setups that don't need cron or other automation that can't enter a passphrase, enter a passphrase
+
+- For using cron or something that can't enter passphrases itself, hit enter to leave the passphrase blank
+
+```
+Name it or just hit enter
+
+Login with a web browser
+	- Hit enter
+	- Click the link
+	- Copy the one-time code over
+```
+
+```
+rm ~/.ssh/id_ed25519.pub
+```
+
+
+
+# Alternate Method for Authentication #
+
+```sh
+ssh-keygen -t rsa -b 4096 -C "youremail@gmail.com"
+```
+
+```
+/home/administrator/.ssh/machine-keys/tomservo-github
+```
+
+Start SSH Agent
+```
+eval "$(ssh-agent -s)"
+```
+
+```
+ssh-add ~/.ssh/machine-keys/tomservo-github
+```
+
+Now add your public key
+```
+gh ssh-key add ~/.ssh/machine-keys/tomservo-github
+```
+
+```
+rm ~/.ssh/machine-keys/playground_vm-github.pub
+```
+
+
 # Usage
 
 #### Create a repo:
@@ -43,84 +111,3 @@ git clone https://ghp_Vm11kPZuXXXXX324790VZMe4HMfd2k8D0D@github.com/yourusername
 - Next you'll delete `/docker/appdata/docker-app`
 - Clone the repo following the instructions above
 - After confirming everything is where you want it, copy folder 3 and file 3 back into the repo so that your app will work properly
-
-
-
-# GitHub CLI Setup #
-
-Install Github CLI (this is all one command)
-```
-type -p curl >/dev/null || sudo apt install curl -y
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-&& sudo apt update \
-&& sudo apt install gh -y
-```
-
-
-```
-gh auth login
-```
-
-```
-Select GitHub.com
-
-Select SSH
-
-Yes
-```
-
-- For setups that don't need cron or other automation that can't enter a passphrase, enter a passphrase
-
-- For using cron or something that can't enter passphrases itself, hit enter to leave the passphrase blank
-
-```
-Name it or just hit enter
-
-Login with a web browser
-	- Hit enter
-	- Click the link
-	- Copy the one-time code over
-```
-
-```
-rm ~/.ssh/id_ed25519.pub
-```
-
-
-
-
-# Alternate Method for Authentication #
-
-```sh
-ssh-keygen -t rsa -b 4096 -C "youremail@gmail.com"
-```
-
-```
-/home/administrator/.ssh/machine-keys/tomservo-github
-```
-
-Start SSH Agent
-```
-eval "$(ssh-agent -s)"
-```
-
-```
-ssh-add ~/.ssh/machine-keys/tomservo-github
-```
-
-Now add your public key
-```
-gh ssh-key add ~/.ssh/machine-keys/tomservo-github
-```
-
-```
-rm ~/.ssh/machine-keys/playground_vm-github.pub
-```
-
-
-
-
-
-
