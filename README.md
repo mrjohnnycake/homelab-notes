@@ -1,7 +1,3 @@
----
-created: Thu 2023-12-28 @ 09:20 AM
-modified: Thu 2023-12-28 @ 09:58 AM
----
 # homelab-notes
 
 This is where I share my personal knowledge base on self-hosting and other homelab topics.
