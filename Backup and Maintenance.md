@@ -566,7 +566,7 @@ sudo rsync -av -e "ssh -i /home/administrator/.ssh/machine-keys/gypsy-to-crow" /
 ```
 
 
-#### OS Updates ####
+#### OS Updates
 
 vim scripts/update.sh
 ```

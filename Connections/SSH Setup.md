@@ -16,7 +16,7 @@ If you're connecting using SSH key pairs and you get an error that says "too man
 # Create Structure (if needed) #
 
 ```
-mkdir -p .ssh/machine-keys
+mkdir .ssh
 
 touch .ssh/authorized_keys
 
@@ -46,17 +46,17 @@ ssh-keygen -t rsa
 
 At the prompt, set the filename and location
 ```
-/home/administrator/.ssh/machine-keys/plex-temp_vm-to-client
+/home/administrator/.ssh/admin_vm-gypsy
 ```
 * Set a passphrase that is known to you
 
 ```
-cat ~/.ssh/machine-keys/plex-temp_vm-to-client.pub >> ~/.ssh/authorized_keys
+cat ~/.ssh/admin_vm-gypsy.pub >> ~/.ssh/authorized_keys
 ```
 * This will add it to the end of the file and not overwrite the exiting key(s)
 
 ```
-rm ~/.ssh/admin-crow-to-tomservo.pub
+rm ~/.ssh/admin_vm-gypsy.pub
 
 exit
 
@@ -72,10 +72,10 @@ In Windows Terminal on the machine you want to add server access to:
 - Download the key from the server
 ```
 *Windows*
-scp administrator@192.168.10.5:~/.ssh/machine-keys/tomservo-windows C:\Users\mrjoh/.ssh/
+scp administrator@192.168.10.5:~/.ssh/tomservo-windows C:\Users\mrjoh/.ssh/
 
 *Linux*
-scp administrator@192.168.40.110:~/.ssh/tomservo-to-admin-crow /home/administrator/.ssh/tomservo-to-admin-crow
+scp administrator@192.168.10.8:~/.ssh/admin_vm-gypsy /root/.ssh/admin_vm-gypsy
 ```
 * Enter the administrator's server password
 

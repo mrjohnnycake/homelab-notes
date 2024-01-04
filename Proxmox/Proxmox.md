@@ -543,9 +543,9 @@ systemctl stop pve-cluster corosync
 
 pmxcfs -l
 
-rm /etc/corosync/*
+rm -rf /etc/corosync/*
 
-rm /etc/pve/corosync.conf
+rm -rf /etc/pve/corosync.conf
 
 killall pmxcfs
 
@@ -563,7 +563,9 @@ nano /etc/pve/jobs.cfg
 
 And finally, run these
 ```
-sudo systemctl disable corosync-qdevice.service
+systemctl disable corosync-qdevice.service
+
+systemctl disable pve-cluster corosync
 
 reboot
 ```
@@ -573,14 +575,14 @@ reboot
 
 Remove the node's folder that is no longer in the cluster
 ```
-sudo rm -rf /etc/pve/nodes/[NODE-NAME]
+rm -rf /etc/pve/nodes/[NODE-NAME]
 ```
 
 Still in root, remove anything from the node you removed from these files:
 ```
-sudo nano /etc/pve/storage.cfg
+nano /etc/pve/storage.cfg
 
-sudo nano /etc/pve/jobs.cfg
+nano /etc/pve/jobs.cfg
 ```
 
 Remove the node from this AND change the remaining nodeid's:
@@ -591,6 +593,11 @@ sudo nano /etc/pve/corosync.conf
 - Now restart the main node and let it come all the way back up
 
 - Finally, reboot any other remaining nodes
+
+
+## Deleting the Cluster
+
+I don't know if there's an official way to do this because I couldn't find it anywhere. What worked for me was just running the "Removing a Cluster Node" steps on the last remaining node.
 
 
 # Resizing VM Drives #

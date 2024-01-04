@@ -57,6 +57,7 @@ sudo nano /etc/fstab
 
 Paste this to the bottom:
 ```
+#
 # Mount zpool from the host (Crow)
 192.168.10.10:/mnt/Deep-13  /mnt/zpool  nfs  auto  0  0
 ```

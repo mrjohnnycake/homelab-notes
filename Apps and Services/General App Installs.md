@@ -487,11 +487,9 @@ sudo usermod -aG docker dave
 
 sudo usermod -aG docker administrator
 
-sudo usermod -aG nas dave
+sudo usermod -aG administrator dave
 
-sudo usermod -aG nas administrator
-
-sudo chown -R dave:nas /mnt/NAS/Offline/kiwix
+sudo chown -R dave:administrator /mnt/NAS/Offline/kiwix
 
 sudo find /mnt/NAS/Offline/kiwix -type d -exec chmod 775 {} \;
 ```
@@ -503,7 +501,7 @@ services:
   kiwix-serve:
     ports:
       - 8888:8080
-    image: kiwix/kiwix-serve
+    image: ghcr.io/kiwix/kiwix-serve:latest
     container_name: kiwix
     volumes:
       - /mnt/NAS/Dave/Offline/kiwix:/data
@@ -511,7 +509,7 @@ services:
       - "*.zim"
     environment:
       - PUID=1010
-      - PGID=1020
+      - PGID=1000
       - TZ=America/Los_Angeles
 ```
 

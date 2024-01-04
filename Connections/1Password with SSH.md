@@ -94,17 +94,17 @@ ssh-keygen -t rsa
 
 At the prompt, set the filename and location
 ```
-/home/administrator/.ssh/admin-crow-vm-windows
+/home/administrator/.ssh/gypsy-windows
 ```
 * Set a passphrase that is known to you if you want. 1P will remember that for you as well
 
 ```
-cat /home/administrator/.ssh/admin-crow-vm-windows.pub >> /home/administrator/.ssh/authorized_keys
+cat /home/administrator/.ssh/gypsy-windows.pub >> /home/administrator/.ssh/authorized_keys
 ```
 * This will add it to the end of the file and not overwrite the exiting key(s)
 
 ```
-rm /home/administrator/.ssh/admin-crow-vm-windows.pub
+rm /home/administrator/.ssh/gypsy-windows.pub
 
 exit
 
@@ -118,7 +118,7 @@ In Windows Terminal on the machine you want to add server access to:
 
 - Download the key from the server
 ```
-scp -o IdentitiesOnly=yes administrator@192.168.40.110:~/.ssh/admin-crow-vm-windows C:\Users\mrjoh/.ssh/
+scp -o IdentitiesOnly=yes administrator@192.168.10.8:~/.ssh/gypsy-windows C:\Users\mrjoh/.ssh/
 ```
 * Enter the administrator's server password
 

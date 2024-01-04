@@ -62,6 +62,7 @@ You only need to install Portainer once. For the other CTs or VMs, you can add t
 	* Select Docker Standalone and click Start Wizard
 	* Select Edge Agent
 	* For the name, you are naming the remote environment you are setting up. So lets say this Portainer server you are currently working on is 192.168.100.1 and you want to connect to 192.168.100.2, you'll want to name it after the service you're connecting to on 192.168.100.2
+		* I use "VM-Name @ Server" as my naming scheme
 	* Leave the Portainer server URL the same. This should be the IP of the Portainer instance you are currently working in
 	* Click on the "More settings" dropdown and set the group to the group you just made
 	* Click Create

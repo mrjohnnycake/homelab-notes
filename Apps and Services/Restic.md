@@ -2,7 +2,18 @@
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Wed 2023-12-27 @ 03:46 PM
 ---
-[This](https://github.com/cupcakearmy/autorestic/) might be worth trying out sometime
+
+https://creativeprojects.github.io/resticprofile/index.html
+
+
+
+==If resticprofile can't be run with `administrator`, look into these options==
+
+https://github.com/cupcakearmy/autorestic
+https://github.com/djmaze/resticker
+https://github.com/alvaro17f/wrestic
+
+
 
 # Running Options
 
@@ -133,7 +144,7 @@ For automating these commands, you can use `cron`
 
 ***
 
-# Running as a Service #
+# Running as a Service (resticprofile)
 
 While running from the command line is easy and familiar it makes it difficult to run multiple options at once. To do that you'll need to use environment variables. This is a project called [resticprofile](https://creativeprojects.github.io/resticprofile/) that works well but the catch is that it has to be run as root. If you try to run it as `user` as opposed to `system` (see profiles.conf), the schedule won't run until you are logged in as `administrator`. That's too bad because it works well. Here is how you use it:
 
@@ -147,6 +158,7 @@ sudo ./install.sh -b /usr/local/bin
 
 rm install.sh
 ```
+
 
 #### Environment Setup
 
@@ -572,7 +584,7 @@ sudo chmod 700 /root/.config/resticprofile/resticprofile-send-error.sh
 ```
 
 
-## Usage ##
+## Usage
 
 ```
 sudo resticprofile --name media-audio schedule
