@@ -778,6 +778,7 @@ Settings are intuitive
 
 ## Watchtower ##
 
+Portainer Stack / Docker Compose version:
 ```yaml
 version: '3'
 
@@ -790,10 +791,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command:
-      --schedule "0 15 3 * * *"
+      --schedule "0 25 2 * * 1-6"
     restart: unless-stopped
 ```
-* this example runs at 3:15am every day. It uses six places instead of the normal five of cron.
+* this example runs at 2:25am Monday thru Saturday. It uses six places instead of the normal five of cron.
+
+Command line version:
+```
+sudo docker run --name watchtower -e TZ="America/Los_Angeles" -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped containrrr/watchtower --debug --cleanup --schedule "0 25 2 * * 1-6"
+```
 
 
 

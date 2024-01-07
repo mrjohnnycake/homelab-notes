@@ -2,23 +2,10 @@
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Wed 2023-12-27 @ 03:49 PM
 ---
-# Conflict Issue #
-
-Syncthing issues
-	- Settings to go with:
-		- On Windows
-			- Turn on "Ignore Permissions"
-		- On Server
-			- Turn off "Ignore Permissions"
-	- All of this could also just be an issue that gets fixed in 1.22.2
-
-
-# VM Install #
+# Install
 
 ```bash
 sudo useradd -u 1010 -M -s /usr/sbin/nologin dave
-
-sudo groupadd -g 1020 nas
 ```
 
 ```yaml
@@ -26,16 +13,16 @@ version: "2.1"
 services:
   syncthing:
     image: lscr.io/linuxserver/syncthing:latest
-    container_name: syncthing
+    container_name: syncthing-USER1
     hostname: syncthing #optional
     environment:
       - PUID=1010
-      - PGID=1020
+      - PGID=1000
       - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
-      - /docker/appdata/syncthing:/config
-      - "/mnt/NAS/Computer/Syncthing/:/NAS"
+      - /docker/appdata/syncthing-USER1:/config
+      - "/mnt/NAS/USER1/Computer/Syncthing/:/USER1"
     ports:
       - 8384:8384
       - 22000:22000/tcp
@@ -43,192 +30,100 @@ services:
       - 21027:21027/udp
     restart: unless-stopped
 ```
+- I'm hosting two different containers for two different people in my house. I'll replace USER1 with their actual names.
+- For this to work your NAS files need to be owned by 1010:1000 (or in my case USER1:administrator)
 
+# Setup Syncthing
 
+Before beginning...
+- BACKUP YOUR FILES!
+- You can do one of three things with your existing files (after you've already backed them up of course) on either the server or Windows:
+	- Starting out, the directories can either be the exact same (the exact same files in both locations), you can have files in place on the Server side and empty on Windows side, or both directories can be empty. So to begin, chose how the directories are going to look and make those changes BEFORE proceeding.
+- After the initial sync you can count on Syncthing to not screw up your files IF YOU FOLLOW MY ADVICE (at least that has been my experience). Just take caution now and you'll be fine. And if I'm lying or a complete fool at least you'll have a backup.
+- Syncthing doesn't require you to forward any ports on your router so no need to worry about that.
 
-# Direct on LXC #
+Let's begin.
 
-```
-apt update
-
-dpkg-reconfigure locales
-```
-
-* Select "en_US.UTF-8". Push Spacebar to select, Tab to exit the selection menu, and Enter to OK.
-
-```
-apt upgrade -y
-
-apt install unattended-upgrades
-
-dpkg-reconfigure --priority=low unattended-upgrades
-```
-
-Select Yes.
-
-```
-apt install curl apt-transport-https gnupg -y
-
-curl -s https://syncthing.net/release-key.txt | apt-key add -
- 
-echo "deb https://apt.syncthing.net/ syncthing release" > /etc/apt/sources.list.d/syncthing.list
-```
-
-```
-useradd -m dave-smb
-
-passwd dave-smb
-
-usermod -aG sudo dave-smb
-
-groupadd syncthing
-
-groupmod -g 1004 syncthing
-
-usermod -aG syncthing dave-smb
-
-mkdir /mnt/syncthing
-
-mkdir /mnt/syncthing/desktop
-
-mkdir /mnt/syncthing/documents
-
-mkdir /mnt/syncthing/downloads
-
-mkdir /mnt/syncthing/notes
-
-mkdir /mnt/syncthing/pictures
-
-chown -R dave-smb:syncthing /mnt/syncthing
-
-find /mnt/syncthing -type d -exec chmod 775 {} \;
-```
-
-
-
-
-```
-su - dave-smb
-
-sudo apt update
-
-sudo apt install syncthing
-
-sudo nano /etc/systemd/system/syncthing@.service
-```
-
-Add this (make sure to change the IP as necessary):
-
-```
-[Unit]
-Description=Syncthing - Open Source Continuous File Synchronization for %I
-Documentation=man:syncthing(1)
-After=network.target
-
-[Service]
-User=%i
-ExecStart=/usr/bin/syncthing -no-browser -gui-address="192.168.40.16:8384" -no-restart -logflags=0
-Restart=on-failure
-SuccessExitStatus=3 4
-RestartForceExitStatus=3 4
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Be sure to set a static IP for your container
-	* Set IP in Unifi Controller
-	* Reboot
-	* Confirm
-
-```
-sudo systemctl enable syncthing@dave-smb.service
-```
-
-Reboot
-
-Go to 192.168.40.16:8384 and follow Setup Syncthing directions below
-
-
-
-
-***
-
-
-
-# Syncthing / SyncTrayzor Setup Walkthrough #
-
-This is my walkthrough for setting up Syncthing on unRAID and its complementing app SyncTrayzor on Windows. I felt that the instructions were lacking so hopefully this will help a fellow homelab-er.
-
-
-## Install Syncthing on unRAID ##
-
-```
-docker create --name='Syncthing' --net='bridge' -e TZ="America/Los_Angeles" -e HOST_OS="Unraid" -e 'PUID'='99' -e 'PGID'='100' -e 'UMASK'='022' -p '8384:8384/tcp' -p '22000:22000/tcp' -p '22000:22000/udp' -p '21027:21027/udp' -v '/mnt/user/NAS/Downloads':'/data1':'rw' -v '/mnt/user/NAS/Pictures/':'/data2':'rw' -v '/mnt/user/NAS/Desktop/':'/data3':'rw' -v '/mnt/user/NAS/Notes/':'/data4':'rw' -v '/mnt/user/appdata/syncthing':'/config':'rw' 'lscr.io/linuxserver/syncthing'
-```
-
-
-* Install Syncthing from the Community Apps repository / page / store / whatever (I used the linuxserver version)
-* The default install settings should be fine except you need to app the paths to the server folders you want to sync
-* In my case, I want to sync my Windows Downloads folders between my laptop and my office computer. The extra benefit will be that those files will also exist on unRAID so I can then back them up per my server backup scheme. I also had an issue getting this to work with Android so until I get that working I can just connect to my NAS share on unRAID through an Android file browser and get whatever I need out of the Downloads folder and copy it to my phone.
-* Click on Add Another Path
-	- For the Name, call it whatever makes sense to you as this is what will show in the left hand side of the Syncthing docker config in unRAID
-	- For the Container Path, I'm using /data/downloads because when I want to sync another folder I can just use /data/folder-name and it'll keep everything nice and tidy and my OCD will be happy.
-	- For Host Path, I have a share called NAS that is my general / go to storage and I created a Downloads folder in there. So my path is /mnt/user/NAS/Downloads/
-	- Click Save.
-
-
-## Setup Syncthing ##
-
-Disclaimer- I already had my server instance of Syncthing setup so there may or may not be an order of operations that Syncthing wants you to do that I've forgotten. I don't think so though so just let me know if my order of operations is off.
-
-Also, in case you were wondering, Syncthing doesn't require you to forward any ports on your router so no need to worry about that.
-
-* Open up the Web GUI of the Syncthing by clicking on its icon
-* Syncthing will ask you to set up a user and password for the GUI so do that first.
-* Let's set up the basic config found under Under Actions-->Settings
+* Open up the Web GUI by going to your-server-IP-address:8384 (ex. 192.168.40.110:8384)
+* Syncthing will ask you to set up a user and password for the GUI so do that first. It'll log you off after you hit Save so log back in with the new credentials.
+* Let's set up the basic config found under Actions-->Settings
 	- General tab:
-		+ Device Name: call this whatever you want. I just named mine ```unRAID```
+		+ Device Name: call this whatever you want (I named mine `Admin VM @ Crow` so I didn't forget where it was installed)
 		+ I can't recall if you need the API Key so go ahead and generate one just in case. You can always delete it later if you'd like.
 	- GUI tab
 		+ Everything can stay as is on this tab but you can change the GUI Theme if you'd like.
 	- Connections
-		+ Set the Sync Protocol Listen Address to ```default```
-		+ My Incoming and Outgoing Rate Limits are both set to ```0```
-		+ Check Enable NAT traversal, Global Discovery, Local Discovery, and Enable Relaying
-		+ Set Global Discovery Servers to ```default```
+		+ Keep the defaults as they are
+			+ Sync Protocol Listen Address to ```default```
+			+ Incoming and Outgoing Rate Limits are both set to ```0```
+			+ Enable NAT traversal, Global Discovery, Local Discovery, and Enable Relaying are all checked
+			+ Global Discovery Servers to ```default```
 	- Click Save
-	- That's it here for now. We'll be jumping back and forth between unRAID and your computer going forward so keep the window open and pay attention to the terms unRAID and Windows because both GUIs look the same. The unRAID Web GUI will be in your browser and the Windows GUI will be inside of SyncTrayzor's window on your computer.
+	- Now I'm going to go back in and edit Settings -> General -> Default Configuration -> Folder Defaults
+		- This is optional but makes adding things easier going forward. Below are the changes I've made but you can do what you want
+		- Changes
+			- Folder Path: /USER1/
+			- Advanced --> Ignore Permissions. Check this only if you have any issues with permissions later. I'll leave it unchecked for now.
+		- I chose not to make any changes in Device Defaults
+	- Click Save and then click Save again
+	- Now delete the Default folder under Folders on the main screen by clicking on it, hitting Edit and then Remove
+
+That's it here for now. We'll be jumping back and forth between the server and your computer going forward so keep the window open and pay attention to the terms Server and Windows because both GUIs look the same. The Server Web GUI will be in your browser and the Windows GUI will be inside of SyncTrayzor's window on your computer (although you may choose to also open that in a browser as well).
 
 
-## Install and Setup SyncTrayzor on Windows ##
+# Install and Setup SyncTrayzor on Windows
 
-* First of all, you don't install Syncthing on it’s own in Windows. Instead, install SyncTrayzor, which runs Syncthing as a part of it, and that's it. You can download it here.
+Note- *As of this writing, SyncTrayzor is two and a half years without an updated release. It still works fine but be aware that it is currently not being developed. Seeing as there is currently no other package for Windows that provides ease of use (such as a tray icon and log readout) I'm going to stick with it for the time being.*
+
+* First of all, you don't install Syncthing on it’s own in Windows. Instead, install SyncTrayzor, which is a wrapper for Syncthing, and that's it. You can download it [here](https://github.com/canton7/SyncTrayzor). For my installation of Windows 11 on a decent computer I'm downloading SyncTrayzorSetup-x64.exe
 * On first launch, SyncTrayzor will likely fail to startup Syncthing but that's okay.
-		+ Still on Windows, go into SyncTrayzor→Settings→Syncthing→Advanced and add this to the “Syncthing Command-line Flags”
-		+ ```-allow-newer-config```
-    	+ It should start up fine now
-* After Syncthing starts up, set the GUI username and password
+	* On Windows, go into SyncTrayzor → File -> Settings → Syncthing → Advanced and add this to the “Syncthing Command-line Flags”
+		+ `-allow-newer-config`
+	 - While you have the Settings window open (these are optional but I found it helps the server / Windows communication go faster):
+		 - On the same tab you were just on change "Syncthing Process Priority" to Above Normal
+		 - On the SyncTrayzor tab, uncheck "Pause devices which connect over a metered network" under Metered Networks
+		 - Click Save
+- Now you can click on Start Syncthing in the main window and it should start up just fine.
+* After start up, set the GUI username and password on the Actions --> Settings --> GUI tab
+* Next, choose a Device Name on the General Tab (mine is `Strong-Bad`)
 * Click on Add Remote Device (still in SyncTrayzor)
-    * After the window pops up, minimize SyncTrayzor and go back to your browser tab with the unRAID Syncthing Web GUI
+    * After the window pops up, minimize SyncTrayzor and go back to your browser tab with the Server Syncthing Web GUI
     	+ Copy the Device ID with Actions→Show ID
     * Now go back to the SyncTrayzor window and enter that Device ID into the Trayzor “Add Device” box under Device ID
     * Leave the Device Name blank because the server will populate that on it's own
-    * On the Sharing tab, click the Introducer and Auto Accept boxes
     * Click Save
-* Now go back to the browser window for the server side of things and accept the new connection by allowing it in the pop-up box
-* Back in SyncTrayzor, delete the Default folder that came pre-setup for you by the app
-* Now click Add Folder
-    * Folder Label: Downloads (or whichever folder you are wanting to sync)
-    * Folder ID: ```downloads``` (lowercase) or whatever folder you entered above
-    * Folder Path is the Downloads folder on Windows (or your desired folder)
-    * On the Sharing tab, select unRAID (or whatever you called your unRAID Syncthing server)
+* Now go back to the browser window for the server side of things and accept the new connection by allowing it in the pop-up box. You may need to wait a minute for it to pop up first.
+* Allow a minute for Windows and the Server to communicate fully. Remote Devices, on each side, should say "Connected (Unused)" when you're ready to move forward.
+* On SyncTrayzor, delete the Default folder that came pre-setup for you by the app
+* Back on the Server side, click Add Folder on the main screen
+    * Folder Label: Desktop (or whichever folder you are wanting to sync)
+    * Folder ID: `windows-desktop` (lowercase) or whatever folder you entered above
+    * Folder Path is the Desktop folder location on your server (or your desired folder) which in my case is `/USER1/Desktop`
+    * On the Sharing tab, select your Windows instance (whatever you called your SyncTrayzor / Syncthing)
     * Click Save
-* Back in your browser window for the server side, accept the folder connection by allowing in in the pop-up box
-* That’s it! Let it do it’s first time sync before adding any new files
-* Back in Windows, you'll likely want to go to SyncTrayzor→Settings→SyncTrayzor and click the Minimize to tray box so that it will all run in the background.
+* Back in your SyncTrayzor window, accept the folder connection by clicking Add in the pop-up
+	* You need to pick your Folder Path on the General tab when it pops up. Since I'm sharing my Desktop I'll Browse to that folder on my computer.
 
-<br>
+That’s it! Let it do it’s first time sync before adding any new files but you should be good to go! Follow the Add Folder instructions again to add any new folders to share.
 
-## Enjoy! ##
 
+
+# Tips
+
+- Currently I'm only using Syncthing to backup my computer files to my server. Where Syncthing excels though is adding a third or more Remote Devices. So if you want to keep your desktop computer, your laptop, and maybe your work computer in sync then just repeat the steps as necessary on those devices. It works great.
+
+* In Windows, you'll likely want to go to SyncTrayzor→Settings→SyncTrayzor and click the Minimize to tray box so that it will all run in the background. Starting on Windows start-up is default.
+
+
+# Errors
+
+- If you get any errors with out of sync files, make sure everything is EXACTLY the same in each directory (the folder on your computer and the directory on the server). Also double check that your permissions are correct.
+
+
+- Permissions issues between different types of devices:
+	- Settings to go with:
+		- On Windows
+			- Turn on "Ignore Permissions"
+		- On Server
+			- Turn off "Ignore Permissions"
+	- All of this could have just been an issue I had with version 1.22.1 so ignore this unless you have an issue.

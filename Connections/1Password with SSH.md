@@ -94,17 +94,17 @@ ssh-keygen -t rsa
 
 At the prompt, set the filename and location
 ```
-/home/administrator/.ssh/gypsy-windows
+/home/administrator/.ssh/proxy_vm-windows
 ```
 * Set a passphrase that is known to you if you want. 1P will remember that for you as well
 
 ```
-cat /home/administrator/.ssh/gypsy-windows.pub >> /home/administrator/.ssh/authorized_keys
+cat /home/administrator/.ssh/proxy_vm-windows.pub >> /home/administrator/.ssh/authorized_keys
 ```
 * This will add it to the end of the file and not overwrite the exiting key(s)
 
 ```
-rm /home/administrator/.ssh/gypsy-windows.pub
+rm /home/administrator/.ssh/proxy_vm-windows.pub
 
 exit
 
@@ -118,18 +118,18 @@ In Windows Terminal on the machine you want to add server access to:
 
 - Download the key from the server
 ```
-scp -o IdentitiesOnly=yes administrator@192.168.10.8:~/.ssh/gypsy-windows C:\Users\mrjoh/.ssh/
+scp -o IdentitiesOnly=yes administrator@192.168.70.120:~/.ssh/proxy_vm-windows C:\Users\mrjoh/.ssh/
 ```
 * Enter the administrator's server password
 
 In File Explorer, open the C: / Users / mrjoh / .ssh / config file (create the file if you haven't already) and add this:
 ```
-Host          admin-crow-vm-windows
-    HostName      192.168.40.110
+Host          proxy_vm-windows
+    HostName      192.168.70.120
     User          administrator
     Port          22
     IdentityAgent \\.\pipe\openssh-ssh-agent
-    IdentityFile  ~/.ssh/admin-crow-vm-windows
+    IdentityFile  ~/.ssh/proxy_vm-windows
 ```
 * Save
 
@@ -141,7 +141,7 @@ In the Windows Terminal settings, duplicate another profile (or create a new one
 
 * Put this into the command line:
 ```
-ssh plex_vm-windows
+ssh proxy_vm-windows
 ```
 
 
@@ -164,3 +164,12 @@ ssh-add -l
 ```
 
 Now open up the new profile in Windows Terminal and the 1P prompt should pop-up and ask you to authenticate with your fingerprint or password.
+
+Additionally, if you want to change the order of connections in the Windows Terminal dropdown, you'll need to edit the config file.
+- Go to Settings --> Open JSON file
+- Scroll down and find the profile you just made. Select the opening bracket all the way to the profiles closing bracket and Cut it out
+	- IMPORTANT- take note that the last profile (the one you're likely selecting) does not have a closing bracket. After you've cut your selection you need to delete that blank line it leaves AND delete the comma after the new last profile's bracket. Any errors in the formatting and the file will not load properly.
+- Paste your profile where you want it AND MAKE SURE you make the formatting look like the others, as far as tabs or spacing goes.
+- IMPORTANT- you need to add a comma after your profiles last bracket if it's not the last profile. Any errors in the formatting and the file will not load properly.
+- Save and close the file
+- Confirm it's where you want it by clicking on the dropdown in Windows Terminal and seeing where it is now.

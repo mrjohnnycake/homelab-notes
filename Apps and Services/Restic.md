@@ -2,18 +2,16 @@
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Wed 2023-12-27 @ 03:46 PM
 ---
+# Links
 
-https://creativeprojects.github.io/resticprofile/index.html
+Most of this tutorial was gleaned from [here](https://creativeprojects.github.io/resticprofile/index.html)
 
+Other options other than resticprofile are:
+- [Autorestic](https://github.com/cupcakearmy/autorestic)
+- [Resticker](https://github.com/djmaze/resticker)
+- [Wrestic](https://github.com/alvaro17f/wrestic)
 
-
-==If resticprofile can't be run with `administrator`, look into these options==
-
-https://github.com/cupcakearmy/autorestic
-https://github.com/djmaze/resticker
-https://github.com/alvaro17f/wrestic
-
-
+Although it's outside of the scope of this tutorial, restic can also be used to backup Docker volumes using [Bivac](https://github.com/camptocamp/bivac)
 
 # Running Options
 
@@ -215,7 +213,7 @@ restic --password-file /root/.config/resticprofile/.keys/.nas-emmett -r sftp:bac
 ```
 * Note that the `--password-file` option has been added so that you don't have to constantly add the password to access the repo
 
-/root/.config/resticprofile/profiles.conf
+/home/administrator/.config/resticprofile/profiles.conf
 ```toml
 [global]
   # Ask restic to unlock a stale lock when its age is more than 2 hours
@@ -620,26 +618,33 @@ sudo resticprofile self-update
 For most maintenance, the command line works just fine
 
 
+
+
+
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio stats
+
+
+
 ## Managing Repos ##
 
 List stats for a backup:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Video/media-audio stats
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio stats
 ```
 
 Check the health of a repository:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/media-audio check
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio check
 ```
 
 List snapshots for a backup:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna snapshots
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio snapshots
 ```
 
 List all of the files in a snapshot along with their path (replace ID with yours)
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna ls b74f32ba
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio ls b74f32ba
 ```
 
 You can check the directory size of the original directory on Crow and the repository directory on Backups VM, respectively, as needed:
@@ -659,27 +664,27 @@ Therefore it is a good idea to limit the number of snapshots Restic is allowed t
 
 To delete snapshots, first list all of the snapshots for a given repository:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna snapshots
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio snapshots
 ```
 
 This will show all of the snapshots and give you their names, which look like `736949a9`, for example
 
 First, delete that snapshot:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna forget 736949a9
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio forget 736949a9
 ```
 
 Next, remove the unneeded data that may exist from the snapshot
 	- So for instance, maybe that snapshot has a file in it you don't need anymore and you only want to keep the files that are in your other snapshots
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna prune
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio prune
 ```
 
 Edit this and run for all necessary back repos.
 	- This will delete the snapshot(s) AND delete outdated files, all in one command
 	- `--tag ''` says to consider all untagged snapshots. Since I'm not tagging any of my snapshots, this looks at all of the repos snapshots when deciding what to delete and what to keep
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna forget --tag '' --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 1 --prune
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio forget --tag '' --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 1 --prune
 ```
 
 
@@ -687,23 +692,23 @@ restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:b
 
 List all snapshots:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna snapshots
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio snapshots
 ```
 - Take a note of the ID of the snapshot you want to restore from
 
 Restoring a specific file (change the ID accordingly):
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna restore b74f32ba --target /mnt/temp --include /mnt/Deep-13/NAS/Anna/test.pdf
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio restore b74f32ba --target /mnt/temp --include /mnt/Deep-13/Media/Audio/other/test.mp3
 ```
 
 Restoring a specific directory:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna restore b74f32ba --target /mnt/temp --include /mnt/Deep-13/NAS/Anna/Pictures
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio restore b74f32ba --target /mnt/temp --include /mnt/Deep-13/NAS/Media/Audio/music
 ```
 
 Restoring an entire repo
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna restore b74f32ba --target /mnt/temp
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio restore b74f32ba --target /mnt/temp
 ```
 
 - Note that in practice, files will likely be needed to be restored to their original datasets and/or directories rather than a temp directory
@@ -713,5 +718,5 @@ restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:b
 
 If you get an error about the repo being locked, just run this:
 ```
-restic --password-file /home/administrator/.config/restic/nas-anna/.pw -r sftp:backups:/mnt/Backups/Everything-Else/nas-anna unlock
+restic --password-file /home/administrator/.config/resticprofile/.keys/.media-audio -r sftp:gypsy:/mnt/Backups/Everything-Else/media-audio unlock
 ```

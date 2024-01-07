@@ -6,7 +6,7 @@ modified: Wed 2023-12-27 @ 03:32 PM
 
 I was able to successfully move an installation to another server by:
 	- Putting the receipt files in the new location and setting the permissions to dave:administrator
-	- Copying the /docker/appdata/paperless directory to the new location and setting the permissions to dave:administrator
+	- Copying the /docker/appdata/paperless directory to the new location and setting the permissions to `dave:administrator`
 
 So make sure to backup those directories accordingly
 
