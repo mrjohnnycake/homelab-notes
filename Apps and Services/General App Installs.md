@@ -653,7 +653,7 @@ version: "3.7"
 services:
   prowlarr:
     container_name: prowlarr
-    image: cr.hotio.dev/hotio/prowlarr:testing
+    image: ghcr.io/hotio/prowlarr:latest
     ports:
       - 9696:9696
     environment:
@@ -723,7 +723,7 @@ services:
 version: "2.1"
 services:
   sonarr:
-    image: lscr.io/linuxserver/sonarr:develop
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
       - PUID=1010

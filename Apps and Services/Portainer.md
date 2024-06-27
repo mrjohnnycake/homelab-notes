@@ -46,6 +46,9 @@ You only need to install Portainer once. For the other CTs or VMs, you can add t
 The environment is now added and you will see it if you head to the Home page in Portainer. But to be able to access it you'll first need to set up some port forwarding rules in your local network router.
 
 
+# Upgrading
+
+https://docs.portainer.io/start/upgrade
 
 # Uninstalling
 #### Removing Edge Environments

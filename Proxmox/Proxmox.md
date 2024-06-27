@@ -2,6 +2,10 @@
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Thu 2023-12-28 @ 08:53 AM
 ---
+
+https://pve.proxmox.com/pve-docs/chapter-notifications.html
+
+
 # Setup
 
 For setup steps, see [[Base Proxmox Setup]]

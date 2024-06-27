@@ -81,6 +81,7 @@ sudo docker run --rm -it -v "/docker/appdata/plex-meta-manager/config:/config:rw
 ```
 sudo docker run -d --restart=unless-stopped -e TZ=America/Los_Angeles -v "/docker/appdata/plex-meta-manager/config:/config:rw" --name plex-meta-manager meisnate12/plex-meta-manager
 ```
+- You will see an ID in the output and then it returns to the prompt
 - You will see the container running in Portainer
 - "-d" makes it run in the background and not show a console window (with all the output)
 
