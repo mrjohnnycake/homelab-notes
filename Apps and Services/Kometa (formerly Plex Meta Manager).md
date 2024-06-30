@@ -1,17 +1,17 @@
 ---
 created: Tue 2023-05-02 @ 06:33 PM
-modified: Wed 2023-12-27 @ 07:55 PM
+modified: Tue 2024-06-26 @ 09:41 PM
 ---
 *These are my actual configs (except for my config.yml file as that contains sensitive info) and will be updated as I get to them.*
 
-For more info see my GitHub "plex-meta-manager" repo
+For more info see my GitHub "kometa" repo
 
 ## Updating Git Repo
 *this header is up top on this note so that I don't forget to do it*
 
-I have my PMM files synced with git so that I can edit them on my computer and then push them to my repo on GitHub. I then log on to my server to fetch or pull the new changes so that everything is ready to go.
+I have my Kometa files synced with git so that I can edit them on my computer and then push them to my repo on GitHub. I then log on to my server to fetch or pull the new changes so that everything is ready to go.
 
-If you're using git to update your PMM files you'll need to push changes from your server to your git repo server (GitHub, etc.) every once in a while. This is because PMM creates new files (mostly assets like posters, etc.) and if you don't add and push those files back to the master repo then some of the purpose of using git is defeated.
+If you're using git to update your Kometa files you'll need to push changes from your server to your git repo server (GitHub, etc.) every once in a while. This is because Kometa creates new files (mostly assets like posters, etc.) and if you don't add and push those files back to the master repo then some of the purpose of using git is defeated.
 
 Run these commands on your server from time to time to keep everything updated:
 ```
@@ -34,9 +34,9 @@ git push
 This docker install is different that your average container install as you need to set up the directories and configs first AND THEN run them with a docker command. It'll make sense as you read along.
 
 ```
-sudo mkdir /docker/appdata/plex-meta-manager
+sudo mkdir /docker/appdata/kometa
 
-cd /docker/appdata/plex-meta-manager
+cd /docker/appdata/kometa
 
 sudo mkdir config
 
@@ -45,16 +45,16 @@ sudo mkdir config/assets
 
 - Option 1: If this is the first time you are installing this and want to start from scratch:
 ```
-sudo curl -fLvo config/config.yml https://raw.githubusercontent.com/meisnate12/Plex-Meta-Manager/master/config/config.yml.template
+sudo curl -fLvo config/config.yml https://raw.githubusercontent.com/Kometa-Team/Kometa/master/config/config.yml.template
 
 sudo nano config/config.yml
 ```
 
 - Option 2: If you want to copy a pre-existing temple (like mine found below):
 ```
-sudo vim /docker/appdata/plex-meta-manager/config/config.yml
+sudo vim /docker/appdata/kometa/config/config.yml
 ```
-* Then paste in your config
+* Then paste the code into your config
 
 Go [here](https://github.com/meisnate12/Plex-Meta-Manager-Configs) and pick out a template that looks good. You can always change it later.
 
@@ -65,21 +65,21 @@ Go [here](https://github.com/meisnate12/Plex-Meta-Manager-Configs) and pick out 
 
 - To run the entire normal run AND you see the output, run this:
 ```
-sudo docker run --rm -it -v "/docker/appdata/plex-meta-manager/config:/config:rw" meisnate12/plex-meta-manager --run
+sudo docker run --rm -it -v "/docker/appdata/kometa/config:/config:rw" kometateam/kometa:latest --run
 ```
 - If you get an error where it just won't run but you're sure your setup is good, update the docker image and then try again
 - The container will show up in Portainer but will be stopped after running once
 
 To run a specific YAML file only (and skip the rest):
 ```
-sudo docker run --rm -it -v "/docker/appdata/plex-meta-manager/config:/config:rw" meisnate12/plex-meta-manager --run-metadata-files "A-C.yml"
+sudo docker run --rm -it -v "/docker/appdata/kometa/config:/config:rw" kometateam/kometa:latest --run-files "Charts.yml"
 ```
 
 #### Scheduling
 
 - To keep the container running all the time and have PMM run every day at 5a (that's by it's design), run this command once:
 ```
-sudo docker run -d --restart=unless-stopped -e TZ=America/Los_Angeles -v "/docker/appdata/plex-meta-manager/config:/config:rw" --name plex-meta-manager meisnate12/plex-meta-manager
+sudo docker run -d --restart=unless-stopped -e TZ=America/Los_Angeles -v "/docker/appdata/kometa/config:/config:rw" --name kometa kometateam/kometa:latest
 ```
 - You will see an ID in the output and then it returns to the prompt
 - You will see the container running in Portainer
@@ -87,7 +87,7 @@ sudo docker run -d --restart=unless-stopped -e TZ=America/Los_Angeles -v "/docke
 
 
 Further notes on installation:
-https://metamanager.wiki/en/latest/home/guides/docker.html
+https://metamanager.wiki/en/latest/kometa/install/docker/
 
 
 
@@ -132,20 +132,29 @@ https://metamanager.wiki/en/latest/home/guides/docker.html
 
 config/config.yml
 ```yaml
+###
+### THIS IS MY WORKING CONFIG FILE FOR MY SETUP
+###
+### TOKENS AND APIs HAVE BEEN CHANGED FOR MY PRIVACY
+###
+
 libraries:
 
-#######################################################
-#   LIBRARY NAMES MUST MATCH THE PLEX LIBRARY NAMES   #
-#######################################################
+########################################
 
-  Movies:
-    metadata_path:
-    - folder: //config/collections/movies/
-    - folder: //config/metadata/movies/
-    settings:
-      asset_directory: //config/assets/movies/
-      overlay_path: //config/overlays/movies/
-      remove_overlays: true
+#   MUST MATCH THE PLEX LIBRARY NAME   #
+
+########################################
+
+  Movies:
+    metadata_files:
+    - folder: //config/metadata/movies/
+    collection_files:
+    - folder: //config/collections/movies/
+    settings:
+      asset_directory: //config/assets/movies/
+      overlay_files: //config/overlays/movies/
+      remove_overlays: true
     operations:
       mass_content_rating_update: mdb_commonsense
       content_rating_mapper:
@@ -157,18 +166,19 @@ libraries:
         R: 18
     report_path: /config/reports/Movies.yml
 
-  Music:
-    metadata_path:
-    - folder: //config/metadata/music/
-    settings:
-      asset_directory: //config/assets/music/
+  Music:
+    metadata_files:
+    - folder: //config/metadata/music/
+    settings:
+      asset_directory: //config/assets/music/
     report_path: /config/reports/Music.yml
 
   Shows:
-    metadata_path:
-    - folder: //config/collections/shows/
+    metadata_files:
     - folder: //config/metadata/shows/
-    - pmm: country
+    collection_files:
+    - folder: //config/collections/shows/
+    - default: country
       template_variables:
         use_other: false
         use_separator: false
@@ -178,14 +188,14 @@ libraries:
         - gb
         - kr
         sort_by: title.asc
-    - pmm: emmy
+    - default: emmy
       template_variables:
         collection_mode: hide
         collection_order: alpha
         data:
           starting: current_year-5
           ending: current_year
-    - pmm: trakt
+    - default: trakt
       template_variables:
         collection_mode: hide
         use_collected: false
@@ -196,7 +206,7 @@ libraries:
         visible_library_trending: true
         visible_home_trending: false
         visible_shared_trending: true
-    - pmm: basic
+    - default: basic
       template_variables:
         collection_mode: hide
         use_episodes: false
@@ -206,8 +216,9 @@ libraries:
         visible_home_released: false
         visible_shared_released: false
       settings:
-        asset_directory: //config/assets/shows/
-        overlay_path: //config/overlays/shows/
+        asset_directory: config/assets/shows
+        asset_folders: true
+        overlay_files: //config/overlays/shows/
         remove_overlays: true
     operations:
       mass_content_rating_update: mdb_commonsense
@@ -221,14 +232,13 @@ libraries:
     report_path: /config/reports/Shows.yml
 
 playlist_files:
-  - folder: //config/playlists/
+- folder: //config/playlists/
 
 settings:
   cache: true
   cache_expiration: 60
-  asset_directory:
   asset_folders: true
-  asset_depth: 1
+  asset_depth: 5
   create_asset_folders: true
   prioritize_assets: true
   dimensional_asset_rename: false
@@ -261,46 +271,62 @@ settings:
   check_nightly: false
   show_unconfigured: true
   playlist_exclude_users:
+  run_order:
+  - operations
+  - metadata
+  - collections
+  - overlays
+  overlay_artwork_filetype: jpg
+  overlay_artwork_quality:
+  asset_directory:
+
 webhooks:                            # Can be individually specified per library as well
-  error:
+  error: gotify
   version:
   run_start:
   run_end:
-  changes:
-  delete:
+  changes: gotify
+  delete: gotify
 
 plex:
-  url: http://192.168.70.70:32400
-  token: RmpEjdfhdfhdfftEQqpzkHY6
+  url: http://your-ip:32400
+  token: your-token
   timeout: 60
   clean_bundles: false
   empty_trash: false
   optimize: false
+  verify_ssl:
+  db_cache:
 
 tmdb:                                                   # REQUIRED for the script to run
-  apikey: b2cb2917asdgsd7f151
+  apikey: your-app-key-here
   language: en
   cache_expiration: 60
   region:
 
 trakt:
-  client_id: 0f2f2ac682fbb7d4bb86ecd91313c3a4311dae25b51099236aa12c1bb516
-  client_secret: fa28266c8e710e82bf1ad8a21b2ba47938f3b413b938b5702f65e224ea8dd
+  client_id: your-client-id
+  client_secret: your-client-secret
   pin:
   authorization:                          # everything below is autofilled by the script
-    access_token: c5dc968c87316516742b1a7f576c6d4699b03e37964925ccce1018226026
-    token_type: Bearer
-    expires_in: 7889237
-    refresh_token: e1e3bbc6b6a54413a113541592e92cccf2bfcc62c0d36fccbfe4fc168cd
-    scope: public
-    created_at: 1694735079
+    access_token:
+    token_type:
+    expires_in:
+    refresh_token:
+    scope:
+    created_at:
+
 mdblist:
-  apikey: 3aq477s316514baunimjnygz
+  apikey: your-api-key
   cache_expiration: 60
+
+gotify:
+  url: https://gotify.yourdomain.com/
+  token: your-gotify-app-token
 
 # radarr:
 #   url: http://192.168.40.45:7878
-#   token: f21559376516514c31c013e1e6ac
+#   token: your-token-here
 #   add_missing: false
 #   add_existing: false
 #   root_folder_path: S:/movies
@@ -315,7 +341,7 @@ mdblist:
 
 # sonarr:
 #   url: http://192.168.40.45:8989
-#   token: 0f9e7a33543242e1f43ae7d86fe
+#   token: your-token-here
 #   add_missing: false
 #   add_existing: false
 #   root_folder_path: S:/shows

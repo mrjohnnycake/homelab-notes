@@ -436,7 +436,7 @@ SHELL=/bin/bash
 HOME=/
 
 # My Scripts
-0 0 * * * cd /docker/appdata/plex-meta-manager && git pull %3E/dev/null 2>&1
+0 0 * * * cd /docker/appdata/kometa && git pull %3E/dev/null 2>&1
 ```
 - add, commit and push are far too complex to leave to cron so they must be run manually from time to time
 
@@ -459,7 +459,7 @@ sudo rsync -av -e "ssh -i /home/administrator/.ssh/machine-keys/media_vm-to-toms
 
 sudo rsync -av --exclude 'nzbget.log' -e "ssh -i /home/administrator/.ssh/machine-keys/media_vm-to-tomservo" /docker/appdata/nzbget/ administrator@192.168.10.5:/mnt/Deep-13/Backups/Tom-Servo/appdata/NZBGet/
 
-sudo rsync -av --exclude '.git' -e "ssh -i /home/administrator/.ssh/machine-keys/media_vm-to-tomservo" /docker/appdata/plex-meta-manager/ administrator@192.168.10.5:/mnt/Deep-13/Backups/Tom-Servo/appdata/Plex-Meta-Manager/
+sudo rsync -av --exclude '.git' -e "ssh -i /home/administrator/.ssh/machine-keys/media_vm-to-tomservo" /docker/appdata/kometa/ administrator@192.168.10.5:/mnt/Deep-13/Backups/Tom-Servo/appdata/Plex-Meta-Manager/
 
 sudo rsync -av -e "ssh -i /home/administrator/.ssh/machine-keys/media_vm-to-tomservo" /docker/appdata/prowlarr/Backups/scheduled/ administrator@192.168.10.5:/mnt/Deep-13/Backups/Tom-Servo/appdata/Prowlarr/
 
