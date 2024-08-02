@@ -1,9 +1,20 @@
 ---
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Thu 2023-12-28 @ 08:53 AM
+tags:
+  - Homelabbing
 ---
+# To Do's
 
-https://pve.proxmox.com/pve-docs/chapter-notifications.html
+- [ ] #proxmox [[Upgrades Project]] #Homelabbing 
+- [ ] #proxmox Backup Proxmox system files? #Homelabbing 
+- [ ] #proxmox Update [[Proxmox Drive Switch]] now that the [[Base Proxmox Setup]] note is there #Homelabbing 
+- [ ] #proxmox Proxy and Websites VMs don't work when using IdentityAgent #Homelabbing 
+- [ ] #proxmox [Proxmox Automation Scripts](https://tteck.github.io/Proxmox/) #Homelabbing 
+- [ ] #proxmox Setup notifications #Homelabbing 
+	- Need to document this process
+	- https://youtu.be/85ME8i4Ry6A
+	- https://pve.proxmox.com/pve-docs/chapter-notifications.html
 
 
 # Setup

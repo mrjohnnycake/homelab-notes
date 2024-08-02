@@ -83,7 +83,7 @@ Done thru Cloudflare Access
 
 
 
-## Cloudflare Tunnel ##
+## [[Cloudflare Tunnel]] ##
 
 My use of `cloudflared-1` is because I had a couple of different tunnels for two different domains
 

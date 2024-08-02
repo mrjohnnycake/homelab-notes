@@ -1,8 +1,7 @@
 ---
 title: Readable Note Name that describes the note
 created: Fri 2024-01-12 @ 06:29 PM
-tags:
-  - "#template"
+tags: []
 type: 
 modified: Fri 2024-01-12 @ 06:29 PM
 ---

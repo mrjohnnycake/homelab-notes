@@ -4,15 +4,14 @@ created: Tue 2023-12-19 @ 9:12 AM
 aliases:
   - Default Note
   - Note Layout
-tags:
-  - "#template"
+tags: []
 type: 
 modified: Thu 2023-12-28 @ 08:53 AM
 ---
 > [!abstract] In This Install
 > - 
 
-*This note is for brand new installs OR starting over completely. For upgrading pre-existing installs see* my [[Proxmox]] note
+*This note is for brand new installs OR starting over completely. For upgrading pre-existing installs see* my [[Proxmox OS]] note
 
 # Pre-Steps
 

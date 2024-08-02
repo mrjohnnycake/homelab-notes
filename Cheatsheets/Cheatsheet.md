@@ -1,6 +1,9 @@
 ---
 created: Tue 2023-05-02 @ 06:31 PM
 modified: Fri 2024-01-12 @ 06:23 PM
+tags:
+  - Homelabbing
+sticker: emoji//1f4c3
 ---
 https://github.com/xcad2k/cheat-sheets
 
@@ -418,14 +421,14 @@ Link to an Obsidian note:
 [[Cheatsheet]]
 
 Link to an Obsidian note but call it something different:
-[[Homelab To Do|stuff]]
+[[Homelab|stuff]]
 
 
 Link to a header somewhere on the same page or a different note:
 [[Cheatsheet#Path]]
 
 
-[[Homelab To Do#Next Up]]
+[[Homelab#Next Up]]
 
 Link to blocks in a page
 [[Cheatsheet#^c32f3f |Install Samba]]
@@ -437,7 +440,7 @@ Link to blocks in a page
 
 ## Tags ##
 
-#tag
+Use a hash followed by the word you want (ie. `#tag`)
 
 
 

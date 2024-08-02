@@ -6,6 +6,16 @@ modified: Wed 2023-12-27 @ 04:02 PM
 > If you use 1Password you can use it to login to your server using Windows Terminal
 
 
+# To Do's
+
+- [ ] Still need to figure out how to automate 1P backups
+	- Don't send 1p backups to off-site server, only keep on local servers
+
+
+
+
+---
+
 Some of this is gleaned from [here](https://developer.1password.com/docs/ssh/get-started/)
 
 

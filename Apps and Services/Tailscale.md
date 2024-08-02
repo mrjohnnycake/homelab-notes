@@ -1,3 +1,13 @@
+---
+tags:
+  - Homelabbing
+---
+# To Do's
+
+- [ ] #tailscale Install Tailscale as needed #Homelabbing 
+
+
+
 # Install #
 
 This app is ridiculously easy to set up

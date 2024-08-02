@@ -452,7 +452,6 @@ services:
 ```
 
 
-
 ## Gotify ##
 
 ```
@@ -477,40 +476,6 @@ services:
     volumes:
       - "/docker/appdata/gotify:/app/data"
     restart: unless-stopped
-```
-
-
-## Kiwix ##
-
-```bash
-sudo usermod -aG docker dave
-
-sudo usermod -aG docker administrator
-
-sudo usermod -aG administrator dave
-
-sudo chown -R dave:administrator /mnt/NAS/Offline/kiwix
-
-sudo find /mnt/NAS/Offline/kiwix -type d -exec chmod 775 {} \;
-```
-
-```yaml
-version: '3.3'
-
-services:
-  kiwix-serve:
-    ports:
-      - 8888:8080
-    image: ghcr.io/kiwix/kiwix-serve:latest
-    container_name: kiwix
-    volumes:
-      - /mnt/NAS/Dave/Offline/kiwix:/data
-    command:
-      - "*.zim"
-    environment:
-      - PUID=1010
-      - PGID=1000
-      - TZ=America/Los_Angeles
 ```
 
 
@@ -692,29 +657,6 @@ services:
 ```
 
 Restore from backup
-
-
-
-## Readarr ##
-
-```yaml
-version: "2.1"
-services:
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    environment:
-      - PUID=1010
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /docker/appdata/readarr:/config
-      - /mnt/Media/Books:/books
-      - /mnt/SSD/Downloads:/downloads
-    ports:
-      - 8787:8787
-    restart: unless-stopped
-```
 
 
 ## Sonarr ##

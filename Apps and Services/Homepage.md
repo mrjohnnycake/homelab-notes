@@ -1,3 +1,29 @@
+---
+tags:
+  - Homelabbing
+---
+# To Do's
+
+- [ ] #homepage-app https://gethomepage.dev/v0.7.0/widgets/services/homeassistant/ #Homelabbing 
+- [ ] #homepage-app https://gethomepage.dev/v0.7.0/widgets/services/paperlessngx/ #Homelabbing 
+- [ ] #homepage-app https://gethomepage.dev/v0.7.0/widgets/services/changedetectionio/ #Homelabbing 
+- [ ] #homepage-app https://gethomepage.dev/v0.7.0/widgets/services/urbackup/ #Homelabbing 
+- [ ] #homepage-app https://gethomepage.dev/v0.7.0/widgets/services/plex-tautulli/ #Homelabbing 
+- [ ] #homepage-app Need to figure out how to monitor VMs #Homelabbing 
+- [ ] #homepage-app Need to figure out how to hide REFRESH icon and VERSION NUMBER #Homelabbing 
+- [ ] #homepage-app I need something to monitor ZFS pool(s). Maybe Glances? #Homelabbing 
+- [ ] #homepage-app Get Paperless stats working #Homelabbing 
+- [ ] #homepage-app Figure out Docker integration #Homelabbing 
+	- Needs to be secure
+	- Needs to support multiple VMs
+- [ ] #homepage-app AFTER EVERYTHING IS SETUP, decide on a working layout #Homelabbing 
+#####       Wants / Requests
+- CSS support
+- Hide certain labels
+- Additional pages like Homer
+- Click on Informational Widgets
+
+
 # Installation
 
 ```yaml

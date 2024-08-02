@@ -91,6 +91,20 @@ https://metamanager.wiki/en/latest/kometa/install/docker/
 
 
 
+# Usage
+
+#### Movies
+
+`edition`
+- Text to change Edition
+
+#### Shows
+
+`tmdb_show`
+- TMDb Show ID to use for metadata useful for miniseries that have been compiled into a movie. **This is not used to say this show is the given ID.**
+
+
+
 # Configuring #
 
 ## File Structure ##

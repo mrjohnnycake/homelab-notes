@@ -2,11 +2,10 @@
 created: Tue 2023-05-02 @ 06:32 PM
 modified: Wed 2023-12-27 @ 04:20 PM
 ---
-#todo 
-
-- [ ] need to auto detect distro
 
 
+
+need to auto detect distro
 
 # Fresh Install #
 
