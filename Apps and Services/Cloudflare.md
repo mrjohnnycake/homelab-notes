@@ -3,34 +3,128 @@ created: Tue 2023-05-02 @ 06:32 PM
 modified: Wed 2023-12-27 @ 01:47 PM
 ---
 
-All of my personal tokens and whatnot have been changed in the examples below
+# Cloudflare Tunnel with App Access via Docker
 
+This tutorial will allow you to expose an app running on your server to the internet in a secure manner.
 
-- Go to Cloudflare -> yourdomain.com -> Access -> Launch Zero Trust -> Access -> Tunnels and click on "Create a Tunnel"
+This was setup with my own docker Homepage instance that can be found at `start.mrjohnnycake.com`. I think it will be easier to show the simplicity of tunnel creation by using this site as an example.
+
+This tutorial assumes you have a Linux server running Docker with Docker Compose v2 (for lower versions please adjust your Docker commands)
+
+There will be another step you'll want to do after your app is exposed (assuming you want to control who can access your app) and that is adding an authentication method so that only those with proper permission can see your app. This tutorial doesn't cover that but it is easily done thru Cloudflare as well. In the meantime, when you're done with this tutorial, anyone online will be able to see your app / website.
+
+Note- *There is no need to set any port forwarding rules on your router with this setup*
+
+## Steps
+
+- Login to Cloudflare and click on the domain name you want to work with
+- First go to DNS and delete the DNS entries for your domain
+	- As of my functioning test, I started with zero DNS entries. The 
+- Next click Access on the left side navigation and click Launch Zero Trust
+- Select your account
+- Go to Networks --> Tunnels and click Add a tunnel
+- Choose "Select Cloudflared"
+- Name your tunnel
+- Under "Choose your environment" go to the Docker tab and copy the command under "Install and run a connector". Paste it in a notepad or something for now.
+- Click Next
+- Under Public Hostnames, enter the info for your app you are trying to expose.
+	- For my Homepage instance, I'll enter `start` under Subdomain and select `mrjohnnycake.com` under the dropdown under Domain
+	- Under Type I'm selecting HTTP. This doesn't make sense since we want to access the site using HTTPS but choosing that here will cause everything to not work so just go with this for now and you can confirm for yourself later that your app is being exposed with HTTPS.
+	- Under URL, I entered `192.168.70.160:3005` which is the IP and port my app is at on my server.
+	- Click Save Tunnel
+
+Your tunnel is currently inactive because you haven't set up your server yet so let's do that now.
+
+- Connect to your server via SSH
+- We're going to setup the Docker container that will run the tunnel connector on our end. My Docker apps are in `/opt` so that's what I'll be using here but you're free to put your directory wherever you see fit.
+- Run these commands (changing `cloudflared-mrjc` to whatever you want to call your directory)
 
 ```
-Tunnel name: whatever-you-want-to-call-your-tunnel
+sudo mkdir -p /opt/cloudflared-mrjc
 
-- click "Save tunnel"
+sudo chmod -R 755 /opt/cloudflared-mrjc
 
-- click Next (you'll do this part in a minute)
-
-Subdomain: enter if needed
-Domain: domain.com
-Type: HTTP
-URL: 192.168.70.170:8000 (local path)
-
-- save [NAME] tunnel
+cd /opt/cloudflared-mrjc
 ```
 
-- The DNS records should be auto-updated
+Alternately, you can combine all of this into one command if you like:
+```
+sudo mkdir -p /opt/cloudflared-mrjc && sudo chmod -R 755 /opt/cloudflared-mrjc && cd /opt/cloudflared-mrjc
+```
+
+Create the `compose.yaml` (if you're running Docker Compose v1 you'll want to name it `docker-compose.yaml`)
+
+```
+sudo nano compose.yaml
+```
+
+Paste this into the file:
+```
+services:
+  cloudflared-mrjc:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-mrjc
+    command: ["tunnel", "--no-autoupdate", "run", "--token", "${TOKEN}", "--hello-world"]
+    env_file:
+      - .env
+```
+
+- I've named my tunnel `cloudflared-mrjc` because I have multiple domains I want to use tunnels for so I need to keep track of which is which. So change those two references to whatever you want.
+
+- Save the file and exit
+
+Next you need to create the `.env` file to "hide" your token a bit from prying eyes:
+```
+sudo nano .env
+```
+
+For this part you'll need that Docker command you copied from Cloudflare. The last part of it is your token so you'll need that now. Paste this in the `.env` file and replace "your-token" with the token found in that Cloudflare command:
+```
+TOKEN="your-token"
+```
+
+My .env file looks like this (using a changed token here for my privacy):
+```
+TOKEN=eyJhIjoiMjdmABCDEFGmM2M2YTYxMDU0NTM1ZmY4Nzc2NWEwNmYiLCJ0IjoiNDBlNTU4OWQtMWRmYi00MzVhLWI1234567DEzNDEwMmQwIiwicyI6Ik1qSTVZek5oWkdVdE56WTJOQzAwTURKakxUbGhObVXYZqUmpaakJrWVRVMSJ9
+```
+
+- Save the file and exit
+
+Now we need to spin up the Docker container:
+```
+sudo docker compose up --build -d
+```
+
+- If you get a "mapping" error it means something is wrong with the compose file formatting. It's almost always a space or tabbing issue. Play around with it and try again.
+
+Now we just want to check the Docker log to see if everything looks good:
+```
+sudo docker logs cloudflared-mrjc
+```
+
+- As long as you don't see any errors you should be good
+
+Now go back to the Cloudflare Tunnels page and hit refresh. You should see that your tunnel is up and healthy.
+
+As one more thing to check, go back to the DNS records for your domain. You'll see that Cloudflare has created a new DNS record that points to the tunnel you just setup. Clever.
+
+That's it. If you have any problems I suggest emptying Cloudflare's cache of your domain by going to Cloudflare --> your.domain --> Overview --> Configure Caching --> Purge Everything. 
+
+
+## Adding Additional Apps
+
+So you've setup your first app with Cloudflare Tunnel and you want to add another one. No problem.
+
+Just go back to the tunnel you just created and selecting Configure from the "three dots" menu and click Add a public hostname. Do what you did before, changing the subdomain and URL as needed.
+
+- Note- You have to use the same domain for this tunnel. I you want to use a different domain you'll have to create another tunnel for that purpose. Just follow the same steps and name it something different
 
 
 
 
-## DNS Settings ##
+# DNS Settings
 
-Should like something like this to begin with:
+Should like something like this without a tunnel:
 
 ```
 -A       domain.com    public IP (using What's My IP)
@@ -42,8 +136,8 @@ Should like something like this to begin with:
 
 * All of the orange proxied sliders can be on
 
-* Until you get it working, put the domain into developer mode.
-	* At the time of this writing, it's under thecanpart.com-->Overview
+* Until you get it working, you can put the domain into developer mode, if you'd like.
+	* At the time of this writing, it's under domain.name --> Overview
 
 
 After setting up the tunnel it should look like this:
@@ -60,93 +154,47 @@ After setting up the tunnel it should look like this:
 
 
 
-## Certificates ##
 
-You need to create a certificate under SSL/TLS-->Origin Server-->Create Certificate. Just follow the instructions and save the files to your computer.
+# App Authentication
 
+For my needs, I'm going to create a policy where whenever I or anyone else first connects to my Homepage instance at `start.mrjohnnycake.com` they will be presented with a Cloudflare form to enter their email address. If their email address has been approved by me they'll get an email where they can click a link and be granted access for one month before they'll have to do it over.
 
--Upload .pem and .key certificates in the SSL tab of Nginx Proxy Manager
-
-
-
-
-## Authentication ##
-
-Done thru Cloudflare Access
+It's easy to do.
 
 * Login to Cloudflare
-* Select domain
-* Click Access on the sidebar
-* Click “Create Access Policy” for any new apps I need access to from other locations
-* I left it off for Overseerr because that app uses Plex as an auth and adding another would deter users
-* No need to set up with Plex as there is a plex.tv address with auth already supplied
+* Select your domain
+* Click Access on the sidebar then Launch Zero Trust
+* Select your account
+* Click Access --> Applications --> Add an application
+* Select Self Hosted
+
+Under Application Configuration:
+- Enter the name of your app under Application name, the amount of time you want the access to last under Session Duration, your subdomain (if any), and your domain name.
+
+I everything else as default on this page and click Next 
+
+On the Add Policies page:
+- I'm going to name my Policy "Email"
+- I select Allow under Action because I want approved emails to be allowed to see the site
+- I set the Session Duration to 1 month because I don't want to be doing this all the time and it's a pretty low security risk app as it stands already
+- Under Configure Rules, I'm going to select Emails under Selector and then in Value I'm going to enter my email because that's me and I want to access my own page.
+	- If there's anyone else you want to be able to access you app you can enter their emails here and just hit Enter after each one
+- Click Next on the bottom of the page
+
+On the Setup page:
+- I don't think I need any of this stuff so I just click Add Application on the bottom of the page
+
+Now go to your app / website. You'll be greeted by a login code page and you'll need to enter your email and then click Send me a code
+
+Now go to your email and go the email you just received from Cloudflare. You have two choices here:
+- You can copy the code and go back and paste it into the Cloudflare page
+- Or you can be lazy like me and just click the link because that's what I usually do. Just close that Cloudflare page because you won't need it for another month
+
+Either choice you choose you'll be allowed to see your app / website.
+
+That's it.
 
 
-
-## [[Cloudflare Tunnel]] ##
-
-My use of `cloudflared-1` is because I had a couple of different tunnels for two different domains
-
-```
-sudo mkdir -p /docker/appdata/cloudflared-1
-
-sudo chmod -R 777 /docker/appdata/cloudflared-1
-
-sudo docker run -it --rm -v /docker/appdata/cloudflared-1:/home/nonroot/.cloudflared/ cloudflare/cloudflared:latest tunnel login
-
-sudo docker run -it --rm -v /docker/appdata/cloudflared-1:/home/nonroot/.cloudflared/ cloudflare/cloudflared:latest tunnel create crow-1
-```
-
-The tunnel key will look something like this:
-
-	8bXXXXa4-1e35-XXXX-a8ba-86aXXXXb8187
-
-Create the config file:
-
-```
-sudo vim /docker/appdata/cloudflared-1/config.yaml
-```
-
-Add this and change as necessary:
-	* The IP should point to the NPM installation
-	* Change the tunnel UUID to your new one
-	* Change the domain name as needed
-
-```
-tunnel: 8bcXXXX-1e35-4325-XXXX-86a8379b8187
-credentials-file: /home/nonroot/.cloudflared/8bcXXXX-1e35-4325-XXXX-86a8379b8187.json
-
-# NOTE: You should only have one ingress tag, so if you uncomment one block comment out the others
-
-# forward all traffic to Reverse Proxy w/ SSL
-ingress:
-  - service: https://192.168.40.101:4443
-    originRequest:
-      originServerName: domain.com
-
-#forward all traffic to Reverse Proxy w/ SSL and no TLS Verify
-#ingress:
-#  - service: https://REVERSEPROXYIP:PORT
-#    originRequest:
-#      noTLSVerify: true
-```
-
-Install the Docker container
-	* Change the tunnel number at the end to match yours
-
-```
-sudo docker create --name='cloudflared-1' --net='bridge' -e TZ="America/Los_Angeles" -v '/docker/appdata/cloudflared-1':'/home/nonroot/.cloudflared/':'rw' --restart unless-stopped 'cloudflare/cloudflared:latest' tunnel run e8589644-e62b-44da-XXXX-eb4cd4a6246
-```
+Note- *I leave this policy off (or just not setup) for apps that already have their own built-in or third party authentication methods (Google auth, Plex auth, etc.)*
 
 
-```
-docker run cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJhIjoiMjdmNmYyNDFmXXXXXXXXXXXXXXX0NTM1ZmY4Nzc2NWEwNmYiLCJ0IjoiYjk4OWMxOGEtNmI3Zi00MDkwLTk2ZmEtMTczOTRmNmExM2E4IiwicyI6IlptUTVZV0ZsTnpjdE5qYzBPUzAwTkRBekxXSmhaR0XXXXXXXXXXXXXXXXOaiJ9
-```
-
-
-```
-sudo docker create --name='cloudflared-1' --net='bridge' -e TZ="America/Los_Angeles" -v '/docker/appdata/cloudflared-1':'/home/nonroot/.cloudflared/':'rw' --restart unless-stopped 'cloudflare/cloudflared:latest' tunnel run e8589644-e62b-44da-XXXX-eb4cd4a6246
-```
-
-
-Start the container in Portainer
